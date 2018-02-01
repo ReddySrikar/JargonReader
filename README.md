@@ -1,4 +1,8 @@
-# PDF.js
+# JargonReader
+
+Jargon reader is an extension of the awesome open source PDF viewer developed by Mozilla: PDF.js
+
+More to come here!
 
 PDF.js is a Portable Document Format (PDF) viewer that is built with HTML5.
 
