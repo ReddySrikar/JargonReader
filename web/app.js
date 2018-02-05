@@ -43,6 +43,7 @@ import { PDFSidebarResizer } from './pdf_sidebar_resizer';
 import { PDFThumbnailViewer } from './pdf_thumbnail_viewer';
 import { PDFViewer } from './pdf_viewer';
 import { SecondaryToolbar } from './secondary_toolbar';
+import { TranslateTogglebar } from './translate_toggle';
 import { Toolbar } from './toolbar';
 import { ViewHistory } from './view_history';
 
@@ -131,6 +132,8 @@ let PDFViewerApplication = {
   toolbar: null,
   /** @type {SecondaryToolbar} */
   secondaryToolbar: null,
+  /** @type {TranslateToggleBar} */
+  translateTogglebar: null,
   /** @type {EventBus} */
   eventBus: null,
   /** @type {IL10n} */
@@ -383,9 +386,11 @@ let PDFViewerApplication = {
       this.downloadManager = downloadManager;
 
       let container = appConfig.mainContainer;
+      let langtainer = appConfig.languageContainer;
       let viewer = appConfig.viewerContainer;
       this.pdfViewer = new PDFViewer({
         container,
+        langtainer,
         viewer,
         eventBus,
         renderingQueue: pdfRenderingQueue,
@@ -459,6 +464,10 @@ let PDFViewerApplication = {
       this.secondaryToolbar =
         new SecondaryToolbar(appConfig.secondaryToolbar, container, eventBus);
 
+        debugger;
+      this.translateTogglebar =
+        new TranslateTogglebar(appConfig.translateMenu, container, eventBus);
+
       if (this.supportsFullscreen) {
         this.pdfPresentationMode = new PDFPresentationMode({
           container,
@@ -500,6 +509,7 @@ let PDFViewerApplication = {
   },
 
   run(config) {
+    debugger;
     this.initialize(config).then(webViewerInitialized);
   },
 
@@ -689,6 +699,7 @@ let PDFViewerApplication = {
     this.findBar.reset();
     this.toolbar.reset();
     this.secondaryToolbar.reset();
+    this.translateTogglebar.reset();
 
     if (typeof PDFBug !== 'undefined') {
       PDFBug.cleanup();
@@ -1604,6 +1615,12 @@ function webViewerInitialized() {
 
   appConfig.mainContainer.addEventListener('transitionend', function(evt) {
     if (evt.target === /* mainContainer */ this) {
+      PDFViewerApplication.eventBus.dispatch('resize', { source: this, });
+    }
+  }, true);
+
+  appConfig.lanuageContainer.addEventListener('transitionend', function(evt) {
+    if (evt.target === /* languageContainer */ this) {
       PDFViewerApplication.eventBus.dispatch('resize', { source: this, });
     }
   }, true);

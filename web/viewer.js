@@ -79,6 +79,19 @@ function getViewerConfiguration() {
       translate: document.getElementById('translate'),
       viewBookmark: document.getElementById('viewBookmark'),
     },
+
+    translateMenu: {
+      toolbar: document.getElementById('translateMenu'),
+      toggleButton: document.getElementById('translate'),
+      swedish: document.getElementById('swedish'),
+      spanish: document.getElementById('spanish'),
+      french: document.getElementById('french'),
+      german: document.getElementById('german'),
+      italian: document.getElementById('italian'),
+      portuguese_br: document.getElementById('portuguese_br'),
+      bulgarian: document.getElementById('bulgarian'),
+    },
+    
     secondaryToolbar: {
       toolbar: document.getElementById('secondaryToolbar'),
       toggleButton: document.getElementById('secondaryToolbarToggle'),
