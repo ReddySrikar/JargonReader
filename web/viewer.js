@@ -83,6 +83,8 @@ function getViewerConfiguration() {
     translateMenu: {
       toolbar: document.getElementById('translateMenu'),
       toggleButton: document.getElementById('translate'),
+      toolbarButtonContainer:
+        document.getElementById('tranlsateMenuButtonContainer'),
       swedish: document.getElementById('swedish'),
       spanish: document.getElementById('spanish'),
       french: document.getElementById('french'),

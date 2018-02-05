@@ -19,10 +19,10 @@ import { SCROLLBAR_PADDING } from './ui_utils';
 class TranslateTogglebar {
   /**
    * @param {TranslateTogglebarOptions} options
-   * @param {HTMLDivElement} languageContainer
+   * @param {HTMLDivElement} mainContainer
    * @param {EventBus} eventBus
    */
-  constructor(options, languageContainer, eventBus) {
+  constructor(options, mainContainer, eventBus) {
     debugger;
     this.toolbar = options.toolbar;
     this.toggleButton = options.toggleButton;
@@ -53,14 +53,14 @@ class TranslateTogglebar {
     { element: options.farsi, eventName: 'rotateccw',
       close: false, },
     ];
-    this.items = {
+/*    this.items = {
       firstPage: options.firstPageButton,
       lastPage: options.lastPageButton,
       pageRotateCw: options.pageRotateCwButton,
       pageRotateCcw: options.pageRotateCcwButton,
-    };
+    };*/
 
-    this.languageContainer = languageContainer;
+    this.mainContainer = mainContainer;
     this.eventBus = eventBus;
 
     this.opened = false;
@@ -86,26 +86,26 @@ class TranslateTogglebar {
 
   setPageNumber(pageNumber) {
     this.pageNumber = pageNumber;
-    this._updateUIState();
+    //this._updateUIState();
   }
 
   setPagesCount(pagesCount) {
     this.pagesCount = pagesCount;
-    this._updateUIState();
+    //this._updateUIState();
   }
 
   reset() {
     this.pageNumber = 0;
     this.pagesCount = 0;
-    this._updateUIState();
+    //this._updateUIState();
   }
 
-  _updateUIState() {
+/*  _updateUIState() {
     this.items.firstPage.disabled = (this.pageNumber <= 1);
     this.items.lastPage.disabled = (this.pageNumber >= this.pagesCount);
     this.items.pageRotateCw.disabled = this.pagesCount === 0;
     this.items.pageRotateCcw.disabled = this.pagesCount === 0;
-  }
+  } */
 
   _bindClickListeners() {
     // Button to toggle the visibility of the translate togglebar.
@@ -181,7 +181,7 @@ class TranslateTogglebar {
     if (!this.opened) {
       return; // Only adjust the 'max-height' if the toolbar is visible.
     }
-    this.containerHeight = this.languageContainer.clientHeight;
+    this.containerHeight = this.mainContainer.clientHeight;
 
     if (this.containerHeight === this.previousContainerHeight) {
       return;

@@ -404,6 +404,10 @@ html[dir='rtl'] #toolbarContainer, .findbar, .secondaryToolbar, .translateMenu {
   cursor: default;
 }
 
+.translateMenu {
+  width: 160px;
+}
+
 .findbar {
   min-width: 300px;
 }
@@ -417,10 +421,10 @@ html[dir='rtl'] #toolbarContainer, .findbar, .secondaryToolbar, .translateMenu {
   height: auto;
 }
 html[dir='ltr'] .findbar {
-  left: 68px;
+  right: 68px;
 }
 html[dir='rtl'] .findbar {
-  right: 68px;
+  left: 68px;
 }
 
 .findbar label {
@@ -458,14 +462,20 @@ html[dir='rtl'] #findInput[data-status="pending"] {
   height: auto;
   z-index: 30000;
 }
-html[dir='ltr'] .secondaryToolbar, .translateMenu {
+html[dir='ltr'] .secondaryToolbar {
   right: 4px;
 }
-html[dir='rtl'] .secondaryToolbar, .translateMenu {
+html[dir='rtl'] .secondaryToolbar {
   left: 4px;
 }
+html[dir='ltr'] .translateMenu {
+  right: 45px;
+}
+html[dir='rtl'] .translateMenu {
+  left: 45px;
+}
 
-#secondaryToolbarButtonContainer, #languageContainer {
+#secondaryToolbarButtonContainer, #translateMenuButtonContainer {
   max-width: 200px;
   max-height: 400px;
   overflow-y: auto;
@@ -1998,6 +2008,12 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
     left: 38px;
   }
   html[dir='rtl'] .findbar {
+    right: 38px;
+  }
+  html[dir='ltr'] .translateMenu {
+    left: 38px;
+  }
+  html[dir='rtl'] .translateMenu {
     right: 38px;
   }
 }

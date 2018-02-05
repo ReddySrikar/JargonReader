@@ -386,11 +386,9 @@ let PDFViewerApplication = {
       this.downloadManager = downloadManager;
 
       let container = appConfig.mainContainer;
-      let langtainer = appConfig.languageContainer;
       let viewer = appConfig.viewerContainer;
       this.pdfViewer = new PDFViewer({
         container,
-        langtainer,
         viewer,
         eventBus,
         renderingQueue: pdfRenderingQueue,
@@ -1615,12 +1613,6 @@ function webViewerInitialized() {
 
   appConfig.mainContainer.addEventListener('transitionend', function(evt) {
     if (evt.target === /* mainContainer */ this) {
-      PDFViewerApplication.eventBus.dispatch('resize', { source: this, });
-    }
-  }, true);
-
-  appConfig.lanuageContainer.addEventListener('transitionend', function(evt) {
-    if (evt.target === /* languageContainer */ this) {
       PDFViewerApplication.eventBus.dispatch('resize', { source: this, });
     }
   }, true);
