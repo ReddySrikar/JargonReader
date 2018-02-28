@@ -421,10 +421,10 @@ html[dir='rtl'] #toolbarContainer, .findbar, .secondaryToolbar, .translateMenu {
   height: auto;
 }
 html[dir='ltr'] .findbar {
-  right: 68px;
+  left: 68px;
 }
 html[dir='rtl'] .findbar {
-  left: 68px;
+  right: 68px;
 }
 
 .findbar label {
@@ -960,7 +960,8 @@ html[dir='rtl'] .toolbarButton.pageDown::before {
   content: url(images/toolbarButton-download.png);
 }
 
-.toolbarButton.translate::before, {
+.toolbarButton.translate::before,
+.secondaryToolbarButton.translate::before {
   content: url(images/toolbarButton-translate.png);
 }
 
@@ -2011,7 +2012,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
     right: 38px;
   }
   html[dir='ltr'] .translateMenu {
-    left: 38px;
+    left: 68px;
   }
   html[dir='rtl'] .translateMenu {
     right: 38px;

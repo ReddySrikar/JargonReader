@@ -462,7 +462,6 @@ let PDFViewerApplication = {
       this.secondaryToolbar =
         new SecondaryToolbar(appConfig.secondaryToolbar, container, eventBus);
 
-        debugger;
       this.translateTogglebar =
         new TranslateTogglebar(appConfig.translateMenu, container, eventBus);
 
@@ -507,7 +506,6 @@ let PDFViewerApplication = {
   },
 
   run(config) {
-    debugger;
     this.initialize(config).then(webViewerInitialized);
   },
 
@@ -1420,6 +1418,7 @@ let PDFViewerApplication = {
     };
 
     window.addEventListener('wheel', webViewerWheel);
+    window.addEventListener('dblclick', getSelectedText);
     window.addEventListener('click', webViewerClick);
     window.addEventListener('keydown', webViewerKeyDown);
     window.addEventListener('resize', _boundEvents.windowResize);
@@ -1475,6 +1474,7 @@ let PDFViewerApplication = {
 
     window.removeEventListener('wheel', webViewerWheel);
     window.removeEventListener('click', webViewerClick);
+    window.removeEventListener('dblclick', getSelectedText);
     window.removeEventListener('keydown', webViewerKeyDown);
     window.removeEventListener('resize', _boundEvents.windowResize);
     window.removeEventListener('hashchange', _boundEvents.windowHashChange);
@@ -1735,6 +1735,33 @@ function webViewerTextLayerRendered(evt) {
     PDFViewerApplication.fallback();
   }
 }
+
+function getSelectedText() {
+  var word = window.getSelection().toString();
+  getTranslation('http://localhost:8080/word/translate/'+ word +'/bg',
+  function(err, data) {
+    if (err !== null) {
+      alert('Something went wrong: ' + err);
+    } else {
+      alert(word + " : " + data);
+    }
+  });
+};
+
+function getTranslation(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'text';
+    xhr.onload = function() {
+      var status = xhr.status;
+      if (status === 200) {
+        callback(null, xhr.response);
+      } else {
+        callback(status, xhr.response);
+      }
+    };
+    xhr.send();
+};
 
 function webViewerPageMode(evt) {
   // Handle the 'pagemode' hash parameter, see also `PDFLinkService_setHash`.
@@ -2049,6 +2076,7 @@ function webViewerClick(evt) {
   if (!PDFViewerApplication.secondaryToolbar.isOpen) {
     return;
   }
+
   let appConfig = PDFViewerApplication.appConfig;
   if (PDFViewerApplication.pdfViewer.containsElement(evt.target) ||
       (appConfig.toolbar.container.contains(evt.target) &&

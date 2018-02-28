@@ -23,7 +23,6 @@ class TranslateTogglebar {
    * @param {EventBus} eventBus
    */
   constructor(options, mainContainer, eventBus) {
-    debugger;
     this.toolbar = options.toolbar;
     this.toggleButton = options.toggleButton;
     this.toolbarButtonContainer = options.toolbarButtonContainer;
@@ -53,12 +52,6 @@ class TranslateTogglebar {
     { element: options.farsi, eventName: 'rotateccw',
       close: false, },
     ];
-/*    this.items = {
-      firstPage: options.firstPageButton,
-      lastPage: options.lastPageButton,
-      pageRotateCw: options.pageRotateCwButton,
-      pageRotateCcw: options.pageRotateCcwButton,
-    };*/
 
     this.mainContainer = mainContainer;
     this.eventBus = eventBus;
