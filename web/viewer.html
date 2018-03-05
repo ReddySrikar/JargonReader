@@ -89,6 +89,37 @@ See https://github.com/adobe-type-tools/cmap-resources
         <div id="sidebarResizer" class="hidden"></div>
       </div>  <!-- sidebarContainer -->
 
+      <div id="translatorContainer">
+        <div id="toolbarSidebar">
+          <div class="splitToolbarButton toggled">
+            <button id="viewTranslator" class="toolbarButton toggled" title="Show Thumbnails" tabindex="2" data-l10n-id="thumbs">
+               <span data-l10n-id="thumbs_label">Thumbnails</span>
+            </button>
+            <button id="viewOutline" class="toolbarButton" title="Show Document Outline (double-click to expand/collapse all items)" tabindex="3" data-l10n-id="document_outline">
+               <span data-l10n-id="document_outline_label">Document Outline</span>
+            </button>
+            <button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="4" data-l10n-id="attachments">
+               <span data-l10n-id="attachments_label">Attachments</span>
+            </button>
+          </div>
+        </div>
+        <div id="translateWidgetContent">
+          <h2>Translation appears here!!!
+          Enhance the presentation. :)</h2>
+          <div class="horizontalToolbarSeparator"></div>
+          <h3>Source translation</h3>
+          <div class="horizontalToolbarSeparator"></div>
+          <h3>Target Translation</h3>
+          <div id="thumbnailView">
+          </div>
+          <div id="outlineView" class="hidden">
+          </div>
+          <div id="attachmentsView" class="hidden">
+          </div>
+        </div>
+        <div id="sidebarResizer" class="hidden"></div>
+      </div>  <!-- translateWidgetContainer -->
+
       <div id="mainContainer">
         <div class="findbar hidden doorHanger" id="findbar">
           <div id="findbarInputContainer">
@@ -251,6 +282,11 @@ See https://github.com/adobe-type-tools/cmap-resources
                 </a>
 
                 <div class="verticalToolbarSeparator hiddenSmallView"></div>
+                <!-- Translation Toggle Slider -->
+                <label id="translateSwitch" class="switch" title="Click here to enable translation mode!!! :)">
+                  <input type="checkbox">
+                  <span class="slider round"></span>
+                </label>
 
                 <button id="translate" class="toolbarButton translate hiddenMediumView" title="Translate" tabindex="34" data-l10n-id="download">
                   <span data-l10n-id="download_label">Translate</span>

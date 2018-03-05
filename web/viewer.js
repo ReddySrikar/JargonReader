@@ -133,6 +133,18 @@ function getViewerConfiguration() {
       outlineView: document.getElementById('outlineView'),
       attachmentsView: document.getElementById('attachmentsView'),
     },
+
+    translateWidget: {
+      // Divs (and sidebar button)
+      outerContainer: document.getElementById('outerContainer'),
+      viewerContainer: document.getElementById('viewerContainer'),
+      toggleButton: document.getElementById('sidebarToggle'),
+      // Buttons
+      translatorButton: document.getElementById('viewTranslator'),
+      // Views
+      translatorView: document.getElementById('translatorView'),
+    },
+  
     sidebarResizer: {
       outerContainer: document.getElementById('outerContainer'),
       resizer: document.getElementById('sidebarResizer'),

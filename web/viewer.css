@@ -149,7 +149,7 @@ select {
   position: absolute;
   top: 32px;
   bottom: 0;
-  width: 200px; /* Here, and elsewhere below, keep the constant value for compatibility
+  width: 400px; /* Here, and elsewhere below, keep the constant value for compatibility
                    with older browsers that lack support for CSS variables. */
   width: var(--sidebar-width);
   visibility: hidden;
@@ -161,6 +161,25 @@ select {
   transition-duration: 200ms;
   transition-timing-function: ease;
 }
+
+#translateWidgetContainer {
+  position: absolute;
+  height: 50%;
+  top: 20%;
+  bottom: 0;
+  width: 400px; /* Here, and elsewhere below, keep the constant value for compatibility
+                   with older browsers that lack support for CSS variables. */
+  width: var(--sidebar-width);
+  visibility: hidden;
+  z-index: 99;
+  border-top: 1px solid #333;
+
+  -webkit-transition-duration: 200ms;
+  -webkit-transition-timing-function: ease;
+  transition-duration: 200ms;
+  transition-timing-function: ease;
+}
+
 html[dir='ltr'] #sidebarContainer {
   -webkit-transition-property: left;
   transition-property: left;
@@ -174,8 +193,25 @@ html[dir='rtl'] #sidebarContainer {
   right: calc(-1 * var(--sidebar-width));
 }
 
-.loadingInProgress #sidebarContainer {
+html[dir='ltr'] #translateWidgetContainer {
+  -webkit-transition-property: right;
+  transition-property: right;
+  right: -300px;
+  right: calc(-1 * var(--sidebar-width));
+}
+html[dir='rtl'] #translateWidgetContainer {
+  -webkit-transition-property: left;
+  transition-property: left;
+  left: -300px;
+  left: calc(-1 * var(--sidebar-width));
+}
+
+.loadingInProgress #sidebarContainer{
   top: 36px;
+}
+
+.loadingInProgress #translateWidgetContainer {
+  top: 10%;
 }
 
 #outerContainer.sidebarResizing #sidebarContainer {
@@ -188,7 +224,9 @@ html[dir='rtl'] #sidebarContainer {
 }
 
 #outerContainer.sidebarMoving #sidebarContainer,
-#outerContainer.sidebarOpen #sidebarContainer {
+#outerContainer.sidebarOpen #sidebarContainer,
+#outerContainer.sidebarMoving #translateWidgetContainer,
+#outerContainer.sidebarOpen #translateWidgetContainer {
   visibility: visible;
 }
 html[dir='ltr'] #outerContainer.sidebarOpen #sidebarContainer {
@@ -196,6 +234,13 @@ html[dir='ltr'] #outerContainer.sidebarOpen #sidebarContainer {
 }
 html[dir='rtl'] #outerContainer.sidebarOpen #sidebarContainer {
   right: 0px;
+}
+
+html[dir='ltr'] #outerContainer.sidebarOpen #translateWidgetContainer {
+  right: 20px;
+}
+html[dir='rtl'] #outerContainer.sidebarOpen #translateWidgetContainer {
+  left: 20px;
 }
 
 #mainContainer {
@@ -207,20 +252,26 @@ html[dir='rtl'] #outerContainer.sidebarOpen #sidebarContainer {
   min-width: 320px;
 }
 
-#sidebarContent {
+#sidebarContent, #translateWidgetContent {
   top: 32px;
   bottom: 0;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   position: absolute;
   width: 100%;
-  background-color: hsla(0,0%,0%,.1);
 }
-html[dir='ltr'] #sidebarContent {
+
+#translateWidgetContent {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: #bbb;
+  background-color: #474747;
+  border: 2px solid rgb(212, 211, 211);
+}
+html[dir='ltr'] #sidebarContent, #translateWidgetContent {
   left: 0;
   box-shadow: inset -1px 0 0 hsla(0,0%,0%,.25);
 }
-html[dir='rtl'] #sidebarContent {
+html[dir='rtl'] #sidebarContent, #translateWidgetContent {
   right: 0;
   box-shadow: inset 1px 0 0 hsla(0,0%,0%,.25);
 }
@@ -1956,7 +2007,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 }
 
 @media all and (max-width: 840px) {
-  #sidebarContent {
+  #sidebarContent, #translateWidgetContent {
     background-color: hsla(0,0%,0%,.7);
   }
 
@@ -2024,3 +2075,61 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
     display: none;
   }
 }
+
+.switch {
+  position: relative;
+  display: inline-block;
+  top: 6px;
+  width: 28px;
+  height: 16px;
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 4px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 9px;
+  width: 9px;
+  left: 3px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(13px);
+  -ms-transform: translateX(13px);
+  transform: translateX(13px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
