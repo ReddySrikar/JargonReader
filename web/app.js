@@ -28,6 +28,7 @@ import {
 import { CursorTool, PDFCursorTools } from './pdf_cursor_tools';
 import { PDFRenderingQueue, RenderingStates } from './pdf_rendering_queue';
 import { PDFSidebar, SidebarView } from './pdf_sidebar';
+import { PDFTranslator } from './pdf_translator.js';
 import { getGlobalEventBus } from './dom_events';
 import { OverlayManager } from './overlay_manager';
 import { PasswordPrompt } from './password_prompt';
@@ -114,6 +115,8 @@ let PDFViewerApplication = {
   pdfSidebar: null,
   /** @type {PDFSidebarResizer} */
   pdfSidebarResizer: null,
+  /** @type {PDFTranslator} */
+  pdfTranslator: null,
   /** @type {PDFOutlineViewer} */
   pdfOutlineViewer: null,
   /** @type {PDFAttachmentViewer} */
@@ -496,8 +499,16 @@ let PDFViewerApplication = {
       sidebarConfig.pdfThumbnailViewer = this.pdfThumbnailViewer;
       sidebarConfig.pdfOutlineViewer = this.pdfOutlineViewer;
       sidebarConfig.eventBus = eventBus;
+
+      let translatorConfig = Object.create(appConfig.translator);
+      translatorConfig.pdfViewer = this.pdfViewer;
+      translatorConfig.eventBus = eventBus;
+
       this.pdfSidebar = new PDFSidebar(sidebarConfig, this.l10n);
       this.pdfSidebar.onToggled = this.forceRendering.bind(this);
+
+      this.pdfTranslator = new PDFTranslator(sidebarConfig, this.l10n);
+      this.pdfTranslator.onToggled = this.forceRendering.bind(this);
 
       this.pdfSidebarResizer = new PDFSidebarResizer(appConfig.sidebarResizer,
                                                      eventBus, this.l10n);
@@ -690,6 +701,8 @@ let PDFViewerApplication = {
     this.pdfSidebar.reset();
     this.pdfOutlineViewer.reset();
     this.pdfAttachmentViewer.reset();
+
+    this.pdfTranslator.reset();
 
     this.findController.reset();
     this.findBar.reset();
@@ -1241,6 +1254,8 @@ let PDFViewerApplication = {
     };
     this.isInitialViewSet = true;
     this.pdfSidebar.setInitialView(sidebarView);
+
+    this.pdfTranslator.setInitialView();
 
     if (this.initialBookmark) {
       setRotation(this.initialRotation);
@@ -1820,6 +1835,10 @@ function webViewerSidebarViewChanged(evt) {
     // Only update the storage when the document has been loaded *and* rendered.
     store.set('sidebarView', evt.view).catch(function() { });
   }
+}
+
+function webViewerTranslationMenuToggled(evt) {
+  
 }
 
 function webViewerUpdateViewarea(evt) {
