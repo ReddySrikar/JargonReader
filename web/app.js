@@ -28,7 +28,7 @@ import {
 import { CursorTool, PDFCursorTools } from './pdf_cursor_tools';
 import { PDFRenderingQueue, RenderingStates } from './pdf_rendering_queue';
 import { PDFSidebar, SidebarView } from './pdf_sidebar';
-import { PDFTranslator } from './pdf_translator.js';
+import { PDFTranslator, TranslatorView } from './pdf_translator.js';
 import { getGlobalEventBus } from './dom_events';
 import { OverlayManager } from './overlay_manager';
 import { PasswordPrompt } from './password_prompt';
@@ -121,6 +121,8 @@ let PDFViewerApplication = {
   pdfOutlineViewer: null,
   /** @type {PDFAttachmentViewer} */
   pdfAttachmentViewer: null,
+  /** @type {PDFTranslatorViewer} */
+  pdfTranslatorViewer: null,
   /** @type {PDFCursorTools} */
   pdfCursorTools: null,
   /** @type {ViewHistory} */
@@ -145,6 +147,7 @@ let PDFViewerApplication = {
   downloadComplete: false,
   viewerPrefs: {
     sidebarViewOnLoad: SidebarView.NONE,
+    translatorViewOnLoad: TranslatorView.TRANSLATOR,
     pdfBugEnabled: false,
     showPreviousViewOnLoad: true,
     defaultZoomValue: '',
@@ -211,6 +214,9 @@ let PDFViewerApplication = {
       }),
       preferences.get('sidebarViewOnLoad').then(function resolved(value) {
         viewerPrefs['sidebarViewOnLoad'] = value;
+      }),
+      preferences.get('translatorViewOnLoad').then(function resolved(value) {
+        viewerPrefs['translatorViewOnLoad'] = value;
       }),
       preferences.get('pdfBugEnabled').then(function resolved(value) {
         viewerPrefs['pdfBugEnabled'] = value;
@@ -493,7 +499,13 @@ let PDFViewerApplication = {
         downloadManager,
       });
 
-      // TODO: improve `PDFSidebar` constructor parameter passing
+/*      this.pdfTranslatorViewer = new PDFTranslatorViewer({
+        container: appConfig.translator.translatorView,
+        eventBus,
+        linkService: pdfLinkService,
+      });*/
+
+      // TODO: improve `PDFSidebar` and ´PDFTranslator´ constructor parameter passing
       let sidebarConfig = Object.create(appConfig.sidebar);
       sidebarConfig.pdfViewer = this.pdfViewer;
       sidebarConfig.pdfThumbnailViewer = this.pdfThumbnailViewer;
@@ -502,12 +514,13 @@ let PDFViewerApplication = {
 
       let translatorConfig = Object.create(appConfig.translator);
       translatorConfig.pdfViewer = this.pdfViewer;
+      translatorConfig.pdfTranslatorViewer = this.pdfTranslatorViewer;
       translatorConfig.eventBus = eventBus;
 
       this.pdfSidebar = new PDFSidebar(sidebarConfig, this.l10n);
       this.pdfSidebar.onToggled = this.forceRendering.bind(this);
 
-      this.pdfTranslator = new PDFTranslator(sidebarConfig, this.l10n);
+      this.pdfTranslator = new PDFTranslator(translatorConfig, this.l10n);
       this.pdfTranslator.onToggled = this.forceRendering.bind(this);
 
       this.pdfSidebarResizer = new PDFSidebarResizer(appConfig.sidebarResizer,
@@ -1048,6 +1061,7 @@ let PDFViewerApplication = {
         scrollTop: '0',
         rotation: null,
         sidebarView: SidebarView.NONE,
+        TranslatorView: TranslatorView.TRANSLATOR
       }).catch(() => { /* Unable to read from storage; ignoring errors. */ });
 
       Promise.all([storePromise, pageModePromise]).then(
@@ -1057,6 +1071,7 @@ let PDFViewerApplication = {
           ('zoom=' + this.viewerPrefs['defaultZoomValue']) : null;
         let rotation = null;
         let sidebarView = this.viewerPrefs['sidebarViewOnLoad'];
+        let translatorView = this.viewerPrefs['translatorViewOnLoad'];
 
         if (values.exists && this.viewerPrefs['showPreviousViewOnLoad']) {
           hash = 'page=' + values.page +
@@ -1078,7 +1093,7 @@ let PDFViewerApplication = {
         initialParams.bookmark = this.initialBookmark;
         initialParams.hash = hash;
 
-        this.setInitialView(hash, { rotation, sidebarView, });
+        this.setInitialView(hash, { rotation, sidebarView, translatorView });
 
         // Make all navigation keys work on document load,
         // unless the viewer is embedded in a web page.
@@ -1246,7 +1261,7 @@ let PDFViewerApplication = {
     });
   },
 
-  setInitialView(storedHash, { rotation, sidebarView, } = {}) {
+  setInitialView(storedHash, { rotation, sidebarView, translatorView} = {}) {
     let setRotation = (angle) => {
       if (isValidRotation(angle)) {
         this.pdfViewer.pagesRotation = angle;
@@ -1255,7 +1270,7 @@ let PDFViewerApplication = {
     this.isInitialViewSet = true;
     this.pdfSidebar.setInitialView(sidebarView);
 
-    this.pdfTranslator.setInitialView();
+    this.pdfTranslator.setInitialView(translatorView);
 
     if (this.initialBookmark) {
       setRotation(this.initialRotation);
@@ -1299,6 +1314,9 @@ let PDFViewerApplication = {
     this.pdfRenderingQueue.printing = this.printing;
     this.pdfRenderingQueue.isThumbnailViewEnabled =
       this.pdfSidebar.isThumbnailViewVisible;
+
+    this.pdfRenderingQueue.isTranslationViewEnabled =
+      this.pdfTranslator.isTranslationViewEnabled;
     this.pdfRenderingQueue.renderHighestPriority();
   },
 
@@ -1389,6 +1407,7 @@ let PDFViewerApplication = {
     eventBus.on('scalechanging', webViewerScaleChanging);
     eventBus.on('rotationchanging', webViewerRotationChanging);
     eventBus.on('sidebarviewchanged', webViewerSidebarViewChanged);
+    eventBus.on('translatorviewchanged', webViewerTranslatorToggled);
     eventBus.on('pagemode', webViewerPageMode);
     eventBus.on('namedaction', webViewerNamedAction);
     eventBus.on('presentationmodechanged', webViewerPresentationModeChanged);
@@ -1456,6 +1475,7 @@ let PDFViewerApplication = {
     eventBus.off('scalechanging', webViewerScaleChanging);
     eventBus.off('rotationchanging', webViewerRotationChanging);
     eventBus.off('sidebarviewchanged', webViewerSidebarViewChanged);
+    eventBus.off('translatorviewchanged', webViewerTranslatorToggled);
     eventBus.off('pagemode', webViewerPageMode);
     eventBus.off('namedaction', webViewerNamedAction);
     eventBus.off('presentationmodechanged', webViewerPresentationModeChanged);
@@ -1634,6 +1654,10 @@ function webViewerInitialized() {
 
   appConfig.sidebar.toggleButton.addEventListener('click', function() {
     PDFViewerApplication.pdfSidebar.toggle();
+  });
+
+  appConfig.translator.toggleButton.addEventListener('click', function() {
+    PDFViewerApplication.pdfTranslator.toggle();
   });
 
   Promise.resolve().then(function() {
@@ -1837,8 +1861,15 @@ function webViewerSidebarViewChanged(evt) {
   }
 }
 
-function webViewerTranslationMenuToggled(evt) {
-  
+function webViewerTranslatorToggled(evt) {
+  PDFViewerApplication.pdfRenderingQueue.isTranslationViewEnabled =
+  PDFViewerApplication.pdfTranslator.isTranslationViewVisible;
+
+let store = PDFViewerApplication.store;
+if (store && PDFViewerApplication.isInitialViewSet) {
+  // Only update the storage when the document has been loaded *and* rendered.
+  store.set('translatorView', evt.view).catch(function() { });
+}
 }
 
 function webViewerUpdateViewarea(evt) {

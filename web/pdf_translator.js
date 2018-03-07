@@ -25,10 +25,8 @@ const TranslatorView = {
 };
 
 /**
- * @typedef {Object} PDFSidebarOptions
+ * @typedef {Object} PDFTranslatorOptions
  * @property {PDFViewer} pdfViewer - The document viewer.
- * @property {PDFThumbnailViewer} pdfThumbnailViewer - The thumbnail viewer.
- * @property {PDFOutlineViewer} pdfOutlineViewer - The outline viewer.
  * @property {HTMLDivElement} outerContainer - The outer container
  *   (encasing both the viewer and sidebar elements).
  * @property {HTMLDivElement} viewerContainer - The viewer container
@@ -37,34 +35,32 @@ const TranslatorView = {
  * @property {HTMLButtonElement} toggleButton - The button used for
  *   opening/closing the sidebar.
  * @property {HTMLButtonElement} translatorButton - The button used to show
- *   the thumbnail view.
+ *   the translator view.
  * @property {HTMLDivElement} translatorView - The container in which
- *   the thumbnails are placed.
+ *   the translator is placed.
  * @property {boolean} disableNotification - (optional) Disable the notification
  *   for documents containing outline/attachments. The default value is `false`.
  */
 
-class PDFSidebar {
+class PDFTranslator {
   /**
    * @param {PDFSidebarOptions} options
    * @param {IL10n} l10n - Localization service.
    */
   constructor(options, l10n = NullL10n) {
     this.isOpen = false;
-    this.active = SidebarView.TRANSLATOR;
+    this.active = TranslatorView.TRANSLATOR;
     this.isInitialViewSet = false;
 
     /**
-     * Callback used when the sidebar has been opened/closed, to ensure that
-     * the viewers (PDFViewer/PDFThumbnailViewer) are updated correctly.
+     * Callback used when the translator has been opened/closed, to ensure that
+     * the viewers (PDFViewer/PDFTranslatorViewer) are updated correctly.
      */
     this.onToggled = null;
 
     this.pdfViewer = options.pdfViewer;
-    this.pdfTranslatorViewer = options.pdfThumbnailViewer;
+    this.pdfTranslatorViewer = options.pdfTranslatorViewer;
     // CHANGE THIS ABOVE
-    this.pdfOutlineViewer = options.pdfOutlineViewer;
-
     this.outerContainer = options.outerContainer;
     this.viewerContainer = options.viewerContainer;
     this.eventBus = options.eventBus;
@@ -88,31 +84,31 @@ class PDFSidebar {
     this.isInitialViewSet = false;
 
     this._hideUINotification(null);
-    this.switchView(SidebarView.TRANSLATOR);
+    this.switchView(TranslatorView.TRANSLATOR);
   }
 
   /**
-   * @returns {number} One of the values in {SidebarView}.
+   * @returns {number} One of the values in {TranslatorView}.
    */
   get visibleView() {
-    return (this.isOpen ? this.active : SidebarView.NONE);
+    return (this.isOpen ? this.active : TranslatorView.NONE);
   }
 
   get isTranslatorViewVisible() {
-    return (this.isOpen && this.active === SidebarView.TRANSLATOR);
+    return (this.isOpen && this.active === TranslatorView.TRANSLATOR);
   }
 
   /**
    * @param {number} view - The sidebar view that should become visible,
-   *                        must be one of the values in {SidebarView}.
+   *                        must be one of the values in {TranslatorView}.
    */
-  setInitialView(view = SidebarView.NONE) {
+  setInitialView(view = TranslatorView.NONE) {
     if (this.isInitialViewSet) {
       return;
     }
     this.isInitialViewSet = true;
 
-    if (this.isOpen && view === SidebarView.NONE) {
+    if (this.isOpen && view === TranslatorView.NONE) {
       this._dispatchEvent();
       // If the user has already manually opened the sidebar,
       // immediately closing it would be bad UX.
@@ -122,20 +118,20 @@ class PDFSidebar {
     this.switchView(view, /* forceOpen */ true);
 
     if (isViewPreserved) {
-      // Prevent dispatching two back-to-back `sidebarviewchanged` events,
+      // Prevent dispatching two back-to-back `TranslatorViewchanged` events,
       // since `this.switchView` dispatched the event if the view changed.
       this._dispatchEvent();
     }
   }
 
   /**
-   * @param {number} view - The sidebar view that should be switched to,
-   *                        must be one of the values in {SidebarView}.
-   * @param {boolean} forceOpen - (optional) Ensure that the sidebar is open.
+   * @param {number} view - The translator view that should be switched to,
+   *                        must be one of the values in {TranslatorView}.
+   * @param {boolean} forceOpen - (optional) Ensure that the translator is open.
    *                              The default value is `false`.
    */
   switchView(view, forceOpen = false) {
-    if (view === SidebarView.NONE) {
+    if (view === TranslatorView.NONE) {
       this.close();
       return;
     }
@@ -143,17 +139,18 @@ class PDFSidebar {
     let shouldForceRendering = false;
 
     switch (view) {
-      case SidebarView.TRANSLATOR:
+      case TranslatorView.TRANSLATOR:
         this.translatorButton.classList.add('toggled');
 
-        this.translatorView.classList.remove('hidden');
+
+        // this.translatorView.classList.remove('hidden');
 
         if (this.isOpen && isViewChanged) {
           shouldForceRendering = true;
         }
         break;
       default:
-        console.error('PDFSidebar_switchView: "' + view +
+        console.error('PDFTranslator_switchView: "' + view +
                       '" is an unsupported value.');
         return;
     }
@@ -216,7 +213,7 @@ class PDFSidebar {
    * @private
    */
   _dispatchEvent() {
-    this.eventBus.dispatch('sidebarviewchanged', {
+    this.eventBus.dispatch('translatorviewchanged', {
       source: this,
       view: this.visibleView,
     });
@@ -230,15 +227,15 @@ class PDFSidebar {
       this.onToggled();
     } else { // Fallback
       this.pdfViewer.forceRendering();
-      this.pdfThumbnailViewer.forceRendering();
+      this.pdfTranslatorViewer.forceRendering();
     }
   }
 
   /**
    * @private
    */
-  _updateTranslatorViewer() {
-    let { pdfViewer, pdfThumbnailViewer, } = this;
+/*  _updateTranslatorViewer() {
+    let { pdfViewer, pdfTranslatorViewer, } = this;
 
     // Use the rendered pages to set the corresponding thumbnail images.
     let pagesCount = pdfViewer.pagesCount;
@@ -250,7 +247,7 @@ class PDFSidebar {
       }
     }
     pdfTranslatorViewer.scrollThumbnailIntoView(pdfViewer.currentPageNumber);
-  }
+  } */
 
   /**
    * @private
@@ -261,17 +258,17 @@ class PDFSidebar {
     }
 
     this.l10n.get('toggle_translator_notification.title', null,
-                  'Toggle Translator (document contains outline/attachments)').
+                  'Toggle Translator').
         then((msg) => {
       this.toggleButton.title = msg;
     });
 
     if (!this.isOpen) {
-      // Only show the notification on the `toggleButton` if the sidebar is
+      // Only show the notification on the `toggleButton` if the translator is
       // currently closed, to avoid unnecessarily bothering the user.
       this.toggleButton.classList.add(UI_NOTIFICATION_CLASS);
     } else if (view === this.active) {
-      // If the sidebar is currently open *and* the `view` is visible, do not
+      // If the translator is currently open *and* the `view` is visible, do not
       // bother the user with a notification on the corresponding button.
       return;
     }
@@ -293,7 +290,7 @@ class PDFSidebar {
     };
 
     if (!this.isOpen && view !== null) {
-      // Only hide the notifications when the sidebar is currently open,
+      // Only hide the notifications when the translator is currently open,
       // or when it is being reset (i.e. `view === null`).
       return;
     }
@@ -303,7 +300,7 @@ class PDFSidebar {
       removeNotification(view);
       return;
     }
-    for (view in TranslatorView) { // Remove all sidebar notifications on reset.
+    for (view in TranslatorView) { // Remove all translator notifications on reset.
       removeNotification(TranslatorView[view]);
     }
 
@@ -320,20 +317,6 @@ class PDFSidebar {
     this.viewerContainer.addEventListener('transitionend', (evt) => {
       if (evt.target === this.viewerContainer) {
         this.outerContainer.classList.remove('sidebarMoving');
-      }
-    });
-
-    // Buttons for switching views.
-    this.translatorButton.addEventListener('click', () => {
-      this.switchView(SidebarView.TRANSLATOR);
-    });
-
-    this.eventBus.on('attachmentsloaded', (evt) => {
-      if (evt.attachmentsCount) {
-        this.attachmentsButton.disabled = false;
-
-        this._showUINotification(SidebarView.ATTACHMENTS);
-        return;
       }
     });
 

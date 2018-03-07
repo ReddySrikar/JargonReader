@@ -134,11 +134,11 @@ function getViewerConfiguration() {
       attachmentsView: document.getElementById('attachmentsView'),
     },
 
-    translateWidget: {
-      // Divs (and sidebar button)
+    translator: {
+      // Divs (and translator switch toggle button)
       outerContainer: document.getElementById('outerContainer'),
       viewerContainer: document.getElementById('viewerContainer'),
-      toggleButton: document.getElementById('sidebarToggle'),
+      toggleButton: document.getElementById('translateSwitch'),
       // Buttons
       translatorButton: document.getElementById('viewTranslator'),
       // Views
