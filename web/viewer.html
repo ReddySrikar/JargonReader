@@ -274,11 +274,12 @@ See https://github.com/adobe-type-tools/cmap-resources
 
                 <div class="verticalToolbarSeparator hiddenSmallView"></div>
                 <!-- Translation Toggle Slider -->
-                <label id="translateSwitch" class="switch" title="Click here to enable translation mode!!! :)">
-                  <input type="checkbox">
-                  <span class="slider round"></span>
-                </label>
-
+                <button id="translateToggle" class="toolbarButton" title="Toggle Translatebar" tabindex="change this" data-l10n-id="toggle_translator">
+                  <label id="translateSwitch" class="switch" title="Click here to enable translation mode!!! :)">
+                    <input type="checkbox">
+                    <span class="slider round"></span>
+                  </label>
+                </button>
                 <button id="translate" class="toolbarButton translate hiddenMediumView" title="Translate" tabindex="34" data-l10n-id="download">
                   <span data-l10n-id="download_label">Translate</span>
                 </button>

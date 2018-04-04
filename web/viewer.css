@@ -206,7 +206,7 @@ html[dir='rtl'] #translateWidgetContainer {
   left: calc(-1 * var(--sidebar-width));
 }
 
-.loadingInProgress #sidebarContainer{
+.loadingInProgress #sidebarContainer {
   top: 36px;
 }
 
@@ -223,23 +223,23 @@ html[dir='rtl'] #translateWidgetContainer {
   -moz-user-select: none;
 }
 
-#outerContainer.sidebarMoving #sidebarContainer,
-#outerContainer.sidebarOpen #sidebarContainer,
-#outerContainer.sidebarMoving #translateWidgetContainer,
-#outerContainer.sidebarOpen #translateWidgetContainer {
+#sidebarContainer.sidebarMoving,
+#sidebarContainer.sidebarOpen,
+#translateWidgetContainer.sidebarMoving,
+#translateWidgetContainer.sidebarOpen {
   visibility: visible;
 }
-html[dir='ltr'] #outerContainer.sidebarOpen #sidebarContainer {
+html[dir='ltr'] #sidebarContainer.sidebarOpen {
   left: 0px;
 }
-html[dir='rtl'] #outerContainer.sidebarOpen #sidebarContainer {
+html[dir='rtl'] #sidebarContainer.sidebarOpen {
   right: 0px;
 }
 
-html[dir='ltr'] #outerContainer.sidebarOpen #translateWidgetContainer {
+html[dir='ltr'] #translateWidgetContainer.sidebarOpen {
   right: 20px;
 }
-html[dir='rtl'] #outerContainer.sidebarOpen #translateWidgetContainer {
+html[dir='rtl'] #translateWidgetContainer.sidebarOpen {
   left: 20px;
 }
 
@@ -304,13 +304,27 @@ html[dir='rtl'] #viewerContainer {
   transition-duration: 0s;
 }
 
-html[dir='ltr'] #outerContainer.sidebarOpen #viewerContainer {
+html[dir='ltr'] #sidebarContainer.sidebarOpen #viewerContainer {
   -webkit-transition-property: left;
   transition-property: left;
   left: 200px;
   left: var(--sidebar-width);
 }
-html[dir='rtl'] #outerContainer.sidebarOpen #viewerContainer {
+html[dir='rtl'] #sidebarContainer.sidebarOpen #viewerContainer {
+  -webkit-transition-property: right;
+  transition-property: right;
+  right: 200px;
+  right: var(--sidebar-width);
+}
+
+
+html[dir='rtl'] #translateWidgetContainer.sidebarOpen #viewerContainer {
+  -webkit-transition-property: left;
+  transition-property: left;
+  left: 200px;
+  left: var(--sidebar-width);
+}
+html[dir='ltr'] #translatewidgetContainer.sidebarOpen #viewerContainer {
   -webkit-transition-property: right;
   transition-property: right;
   right: 200px;
@@ -2019,10 +2033,17 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
     background-color: hsla(0,0%,0%,.7);
   }
 
-  html[dir='ltr'] #outerContainer.sidebarOpen #viewerContainer {
+  html[dir='ltr'] #sidebarContainer.sidebarOpen #viewerContainer {
     left: 0px;
   }
-  html[dir='rtl'] #outerContainer.sidebarOpen #viewerContainer {
+  html[dir='rtl'] #sidebarContainer.sidebarOpen #viewerContainer {
+    right: 0px;
+  }
+
+  html[dir='rtl'] #translateWidgetContainer.sidebarOpen #viewerContainer {
+    left: 0px;
+  }
+  html[dir='ltr'] #translateWidgetContainer.sidebarOpen #viewerContainer {
     right: 0px;
   }
 

@@ -1270,7 +1270,7 @@ let PDFViewerApplication = {
     this.isInitialViewSet = true;
     this.pdfSidebar.setInitialView(sidebarView);
 
-    this.pdfTranslator.setInitialView(translatorView);
+    this.pdfTranslator.setInitialView(1);
 
     if (this.initialBookmark) {
       setRotation(this.initialRotation);

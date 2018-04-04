@@ -63,6 +63,7 @@ class PDFTranslator {
     // CHANGE THIS ABOVE
     this.outerContainer = options.outerContainer;
     this.viewerContainer = options.viewerContainer;
+    this.translatorContainer = options.translatorContainer;
     this.eventBus = options.eventBus;
     this.toggleButton = options.toggleButton;
 
@@ -131,7 +132,7 @@ class PDFTranslator {
    *                              The default value is `false`.
    */
   switchView(view, forceOpen = false) {
-    if (view === TranslatorView.NONE) {
+    if (view === TranslatorView.TRANSLATOR) {
       this.close();
       return;
     }
@@ -141,7 +142,6 @@ class PDFTranslator {
     switch (view) {
       case TranslatorView.TRANSLATOR:
         this.translatorButton.classList.add('toggled');
-
 
         // this.translatorView.classList.remove('hidden');
 
@@ -178,8 +178,8 @@ class PDFTranslator {
     this.isOpen = true;
     this.toggleButton.classList.add('toggled');
 
-    this.outerContainer.classList.add('sidebarMoving');
-    this.outerContainer.classList.add('sidebarOpen');
+    this.translatorContainer.classList.add('sidebarMoving');
+    this.translatorContainer.classList.add('sidebarOpen');
 
     this._forceRendering();
     this._dispatchEvent();
@@ -194,8 +194,8 @@ class PDFTranslator {
     this.isOpen = false;
     this.toggleButton.classList.remove('toggled');
 
-    this.outerContainer.classList.add('sidebarMoving');
-    this.outerContainer.classList.remove('sidebarOpen');
+    this.translatorContainer.classList.add('sidebarMoving');
+    this.translatorContainer.classList.remove('sidebarOpen');
 
     this._forceRendering();
     this._dispatchEvent();
@@ -316,7 +316,7 @@ class PDFTranslator {
   _addEventListeners() {
     this.viewerContainer.addEventListener('transitionend', (evt) => {
       if (evt.target === this.viewerContainer) {
-        this.outerContainer.classList.remove('sidebarMoving');
+        this.translatorContainer.classList.remove('sidebarMoving');
       }
     });
 

@@ -75,6 +75,7 @@ class PDFSidebar {
 
     this.outerContainer = options.outerContainer;
     this.viewerContainer = options.viewerContainer;
+    this.sidebarContainer = options.sidebarContainer;
     this.eventBus = options.eventBus;
     this.toggleButton = options.toggleButton;
 
@@ -230,8 +231,8 @@ class PDFSidebar {
     this.isOpen = true;
     this.toggleButton.classList.add('toggled');
 
-    this.outerContainer.classList.add('sidebarMoving');
-    this.outerContainer.classList.add('sidebarOpen');
+    this.sidebarContainer.classList.add('sidebarMoving');
+    this.sidebarContainer.classList.add('sidebarOpen');
 
     if (this.active === SidebarView.THUMBS) {
       this._updateThumbnailViewer();
@@ -249,8 +250,8 @@ class PDFSidebar {
     this.isOpen = false;
     this.toggleButton.classList.remove('toggled');
 
-    this.outerContainer.classList.add('sidebarMoving');
-    this.outerContainer.classList.remove('sidebarOpen');
+    this.sidebarContainer.classList.add('sidebarMoving');
+    this.sidebarContainer.classList.remove('sidebarOpen');
 
     this._forceRendering();
     this._dispatchEvent();
@@ -384,7 +385,7 @@ class PDFSidebar {
   _addEventListeners() {
     this.viewerContainer.addEventListener('transitionend', (evt) => {
       if (evt.target === this.viewerContainer) {
-        this.outerContainer.classList.remove('sidebarMoving');
+        this.sidebarContainer.classList.remove('sidebarMoving');
       }
     });
 

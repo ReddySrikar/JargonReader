@@ -123,6 +123,7 @@ function getViewerConfiguration() {
       // Divs (and sidebar button)
       outerContainer: document.getElementById('outerContainer'),
       viewerContainer: document.getElementById('viewerContainer'),
+      sidebarContainer: document.getElementById('sidebarContainer'),
       toggleButton: document.getElementById('sidebarToggle'),
       // Buttons
       thumbnailButton: document.getElementById('viewThumbnail'),
@@ -138,7 +139,9 @@ function getViewerConfiguration() {
       // Divs (and translator switch toggle button)
       outerContainer: document.getElementById('outerContainer'),
       viewerContainer: document.getElementById('viewerContainer'),
-      toggleButton: document.getElementById('translateSwitch'),
+      translatorContainer: document.getElementById('translateWidgetContainer'),
+      toggleButton: document.getElementById('translateToggle'),
+      
       // Buttons
       translatorButton: document.getElementById('viewTranslator'),
       // Views
