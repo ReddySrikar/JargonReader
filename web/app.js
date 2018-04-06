@@ -160,6 +160,8 @@ let PDFViewerApplication = {
   },
   isViewerEmbedded: (window.parent !== window),
   url: '',
+  defaultTargetLanguage:'sv',
+  currentTargetLanguage:'',
   baseUrl: '',
   externalServices: DefaultExternalServices,
   _boundEvents: {},
@@ -1428,6 +1430,7 @@ let PDFViewerApplication = {
     eventBus.on('documentproperties', webViewerDocumentProperties);
     eventBus.on('find', webViewerFind);
     eventBus.on('findfromurlhash', webViewerFindFromUrlHash);
+    eventBus.on('setTargetLanguage', webViewerSetTargetLanguage);
     if (typeof PDFJSDev === 'undefined' || PDFJSDev.test('GENERIC')) {
       eventBus.on('fileinputchange', webViewerFileInputChange);
     }
@@ -1496,6 +1499,7 @@ let PDFViewerApplication = {
     eventBus.off('documentproperties', webViewerDocumentProperties);
     eventBus.off('find', webViewerFind);
     eventBus.off('findfromurlhash', webViewerFindFromUrlHash);
+    eventBus.off('setTargetLanguage', webViewerSetTargetLanguage);
     if (typeof PDFJSDev === 'undefined' || PDFJSDev.test('GENERIC')) {
       eventBus.off('fileinputchange', webViewerFileInputChange);
     }
@@ -1775,9 +1779,13 @@ function webViewerTextLayerRendered(evt) {
   }
 }
 
+function webViewerSetTargetLanguage(evt) {
+  PDFViewerApplication.currentTargetLanguage = evt;
+}
+
 function getSelectedText() {
   var word = window.getSelection().toString();
-  getTranslation('http://localhost:8080/word/translate/'+ word +'/bg',
+  getTranslation('http://localhost:8080/word/translate/'+ word +'/'+(PDFViewerApplication.currentTargetLanguage ? PDFViewerApplication.currentTargetLanguage : PDFViewerApplication.defaultTargetLanguage),
   function(err, data) {
     if (err !== null) {
       alert('Something went wrong: ' + err);
@@ -1861,6 +1869,7 @@ function webViewerSidebarViewChanged(evt) {
   }
 }
 
+// It is NOT what you thik it is!!!
 function webViewerTranslatorToggled(evt) {
   PDFViewerApplication.pdfRenderingQueue.isTranslationViewEnabled =
   PDFViewerApplication.pdfTranslator.isTranslationViewVisible;

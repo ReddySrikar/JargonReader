@@ -26,31 +26,31 @@ class TranslateTogglebar {
     this.toolbar = options.toolbar;
     this.toggleButton = options.toggleButton;
     this.toolbarButtonContainer = options.toolbarButtonContainer;
-    this.languageButtons = [
-    { element: options.swedish, eventName: 'presentationmode',
+    this.buttons = [
+    { element: options.swedish, eventName: 'setTargetLanguage', eventSubType: 'sv',
       close: true, },
-    { element: options.german, eventName: 'openfile', close: true, },
-    { element: options.english, eventName: 'print', close: true, },
-    { element: options.spanish, eventName: 'download', close: true, },
-    { element: options.french, eventName: null, close: true, },
-    { element: options.italian, eventName: 'firstpage',
-      close: true, },
-    { element: options.portuguese_BR, eventName: 'lastpage', close: true, },
-    { element: options.portuguese_PO, eventName: 'rotatecw',
-      close: false, },
-    { element: options.mandarin, eventName: 'lastpage', close: true, },
-    { element: options.russian, eventName: 'lastpage', close: true, },
-    { element: options.dutch, eventName: 'lastpage', close: true, },
-    { element: options.japanese, eventName: 'lastpage', close: true, },
-    { element: options.danish, eventName: 'lastpage', close: true, },
-    { element: options.norwegian, eventName: 'lastpage', close: true, },
-    { element: options.finnish, eventName: 'lastpage', close: true, },
-    { element: options.hindi, eventName: 'lastpage', close: true, },
-    { element: options.irish, eventName: 'lastpage', close: true, },
-    { element: options.bulgarian, eventName: 'lastpage', close: true, },
-    { element: options.belgian, eventName: 'lastpage', close: true, },
-    { element: options.farsi, eventName: 'rotateccw',
-      close: false, },
+    { element: options.spanish, eventName: 'setTargetLanguage', eventSubType: 'es', close: true, },
+    { element: options.french, eventName: 'setTargetLanguage', eventSubType: 'fr', close: true, },
+    { element: options.german, eventName: 'setTargetLanguage', eventSubType: 'de', close: true, },
+    { element: options.italian, eventName: 'setTargetLanguage', eventSubType: 'it',
+    close: true, },
+    { element: options.portuguese_br, eventName: 'setTargetLanguage', eventSubType: 'pt', close: true, },
+    { element: options.bulgarian, eventName: 'setTargetLanguage', eventSubType: 'bg', close: true, },
+    // Release the languages when support is added on the front end.
+    /*
+    { element: options.mandarin, eventName: 'setTargetLanguage', eventSubType: 'mandarin', close: true, },
+    { element: options.russian, eventName: 'setTargetLanguage', eventSubType: 'russian', close: true, },
+    { element: options.dutch, eventName: 'setTargetLanguage', eventSubType: 'dutch', close: true, },
+    { element: options.japanese, eventName: 'setTargetLanguage', eventSubType: 'japanese', close: true, },
+    { element: options.danish, eventName: 'setTargetLanguage', eventSubType: 'danish', close: true, },
+    { element: options.norwegian, eventName: 'setTargetLanguage', eventSubType: 'norwegian', close: true, },
+    { element: options.finnish, eventName: 'setTargetLanguage', eventSubType: 'finnish', close: true, },
+    { element: options.hindi, eventName: 'setTargetLanguage', eventSubType: 'hindi', close: true, },
+    { element: options.irish, eventName: 'setTargetLanguage', eventSubType: 'irish', close: true, },
+    { element: options.english, eventName: 'setTargetLanguage', eventSubType: 'english', close: true, },
+    { element: options.belgian, eventName: 'setTargetLanguage', eventSubType: 'belgian', close: true, },
+    { element: options.farsi, eventName: 'setTargetLanguage', eventSubType: 'farsi',
+      close: false, },*/
     ];
 
     this.mainContainer = mainContainer;
@@ -64,7 +64,6 @@ class TranslateTogglebar {
 
     // Bind the event listeners for click and cursor tool actions.
     this._bindClickListeners();
-    this._bindCursorToolsListener(options);
 
     // Bind the event listener for adjusting the 'max-height' of the toolbar.
     this.eventBus.on('resize', this._setMaxHeight.bind(this));
@@ -104,39 +103,20 @@ class TranslateTogglebar {
     // Button to toggle the visibility of the translate togglebar.
     this.toggleButton.addEventListener('click', this.toggle.bind(this));
 
-    // All items within the secondary toolbar.
+    // All items within the translate toolbar.
     for (let button in this.buttons) {
-      let { element, eventName, close, eventDetails, } = this.buttons[button];
+      let { element, eventName, eventSubType, close, } = this.buttons[button];
 
       element.addEventListener('click', (evt) => {
         if (eventName !== null) {
-          let details = { source: this, };
-          for (let property in eventDetails) {
-            details[property] = eventDetails[property];
-          }
-          this.eventBus.dispatch(eventName, details);
+          alert('Target hanged to '+ '<h3>'+eventSubType+'</h3>');
+          this.eventBus.dispatch(eventName, eventSubType);
         }
         if (close) {
           this.close();
         }
       });
     }
-  }
-
-  _bindCursorToolsListener(buttons) {
-    this.eventBus.on('cursortoolchanged', function(evt) {
-      buttons.cursorSelectToolButton.classList.remove('toggled');
-      buttons.cursorHandToolButton.classList.remove('toggled');
-
-      switch (evt.tool) {
-        case CursorTool.SELECT:
-          buttons.cursorSelectToolButton.classList.add('toggled');
-          break;
-        case CursorTool.HAND:
-          buttons.cursorHandToolButton.classList.add('toggled');
-          break;
-      }
-    });
   }
 
   open() {
