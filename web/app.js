@@ -47,6 +47,7 @@ import { SecondaryToolbar } from './secondary_toolbar';
 import { TranslateTogglebar } from './translate_toggle';
 import { Toolbar } from './toolbar';
 import { ViewHistory } from './view_history';
+import { languageArr } from './languageConstants';
 
 const DEFAULT_SCALE_DELTA = 1.1;
 const DISABLE_AUTO_FETCH_LOADING_BAR_TIMEOUT = 5000;
@@ -1785,12 +1786,17 @@ function webViewerSetTargetLanguage(evt) {
 
 function getSelectedText() {
   var word = window.getSelection().toString();
-  getTranslation('http://localhost:8080/word/translate/'+ word +'/'+(PDFViewerApplication.currentTargetLanguage ? PDFViewerApplication.currentTargetLanguage : PDFViewerApplication.defaultTargetLanguage),
+  const translateTo = PDFViewerApplication.currentTargetLanguage ? PDFViewerApplication.currentTargetLanguage : PDFViewerApplication.defaultTargetLanguage
+  getTranslation('http://localhost:8080/word/translate/'+ word +'/'+translateTo,
   function(err, data) {
     if (err !== null) {
       alert('Something went wrong: ' + err);
     } else {
-      alert(word + " : " + data);
+      swal({
+        title: word + " : " + data,
+        imageUrl: languageArr.find(x => x.langCode === translateTo).langImg,
+        imageSize: '90x70'
+      })
     }
   });
 };

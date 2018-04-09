@@ -15,6 +15,7 @@
 
 import { CursorTool } from './pdf_cursor_tools';
 import { SCROLLBAR_PADDING } from './ui_utils';
+import { languageArr } from './languageConstants';
 
 class TranslateTogglebar {
   /**
@@ -23,6 +24,7 @@ class TranslateTogglebar {
    * @param {EventBus} eventBus
    */
   constructor(options, mainContainer, eventBus) {
+    this.languageArr = languageArr;
     this.toolbar = options.toolbar;
     this.toggleButton = options.toggleButton;
     this.toolbarButtonContainer = options.toolbarButtonContainer;
@@ -108,8 +110,13 @@ class TranslateTogglebar {
       let { element, eventName, eventSubType, close, } = this.buttons[button];
 
       element.addEventListener('click', (evt) => {
+        const alertDetails = this.languageArr.find(x => x.langCode === eventSubType);
         if (eventName !== null) {
-          alert('Target hanged to '+ '<h3>'+eventSubType+'</h3>');
+          swal({
+            title: alertDetails.helloText+"\nSwitched to "+alertDetails.language.toUpperCase(),
+            timer: 3000,
+            imageUrl: alertDetails.langImg
+          });
           this.eventBus.dispatch(eventName, eventSubType);
         }
         if (close) {
