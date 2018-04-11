@@ -92,6 +92,7 @@ function getViewerConfiguration() {
       italian: document.getElementById('italian'),
       portuguese_br: document.getElementById('portuguese_br'),
       bulgarian: document.getElementById('bulgarian'),
+      english: document.getElementById('english'),
     },
     
     secondaryToolbar: {

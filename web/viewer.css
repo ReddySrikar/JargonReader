@@ -1185,6 +1185,10 @@ html[dir="rtl"] .secondaryToolbarButton > span {
   content: url(images/languageButton-bulgarian.png);
 }
 
+.secondaryToolbarButton.english::before {
+  content: url(images/languageButton-english.png);
+}
+
 .verticalToolbarSeparator {
   display: block;
   padding: 8px 0;

@@ -5,7 +5,8 @@ const languageArr = [
   { language: 'german', langCode: 'de', langImg: 'images/alertFlag-germany.png', helloText:  'Guten Tag!'},
   { language: 'italian', langCode: 'it', langImg: 'images/alertFlag-italy.png', helloText:  'Ciao Ciao!'},
   { language: 'portuguese', langCode: 'pt', langImg: 'images/alertFlag-brazil.png', helloText: 'Olá!'},
-  { language: 'bulgarian', langCode: 'bg', langImg: 'images/alertFlag-bulgaria.png', helloText: 'Здравей!' }
+  { language: 'bulgarian', langCode: 'bg', langImg: 'images/alertFlag-bulgaria.png', helloText: 'Здравей!' },
+  { language: 'english', langCode: 'en', langImg: 'images/alertFlag-england.png', helloText: 'Howdy!' }
   // NOTE: Keep Danish helloText Hahahaaha!
   /*{ language: mandarin, langcode: 'zh', langImg: 'languageButton-chinese.png' },
   { language: russian, langcode: 'ru', langImg: 'languageButton-russian.png' },

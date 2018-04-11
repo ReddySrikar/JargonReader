@@ -38,6 +38,8 @@ class TranslateTogglebar {
     close: true, },
     { element: options.portuguese_br, eventName: 'setTargetLanguage', eventSubType: 'pt', close: true, },
     { element: options.bulgarian, eventName: 'setTargetLanguage', eventSubType: 'bg', close: true, },
+    { element: options.english, eventName: 'setTargetLanguage', eventSubType: 'en', close: true, },
+
     // Release the languages when support is added on the front end.
     /*
     { element: options.mandarin, eventName: 'setTargetLanguage', eventSubType: 'mandarin', close: true, },
